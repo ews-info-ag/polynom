@@ -1,5 +1,7 @@
 package polynom;
 
+import java.util.TreeSet;
+
 /**
  * Polynom der Form f(x) = m*x+b
  */
@@ -41,6 +43,24 @@ public class LinearesPolynom implements Polynom {
     @Override
     public double ersteNullstelle() {
         return -b / m;
+    }
+
+    @Override
+    public int getDegree() {
+        if (this.m != 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    @Override
+    public TreeSet<Double> alleNullstellen() {
+        TreeSet<Double> nullstellen = new TreeSet<Double>();
+        if (this.getDegree() == 1) {
+            nullstellen.add(this.ersteNullstelle());
+        }
+        return nullstellen;
     }
 
 }

@@ -5,7 +5,10 @@
  */
 package tools;
 
+import java.util.TreeSet;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import polynom.Polynom;
 
 /**
@@ -13,23 +16,57 @@ import polynom.Polynom;
  * @author r.luedecke
  */
 public class NewtonSolver {
+    
+    Scanner scanner = new Scanner();
 
-    public Vector<Double> solve(Polynom pol, double value) {
-        Vector<Double> solutions = new Vector<Double>();
+    public TreeSet<Double> solve(Polynom pol, double value) {
+        TreeSet<Double> solutions = new TreeSet<Double>();
         int maxSolutions = pol.getDegree();
         
+        
         //lineare Abtastung
+        for (int i = 0; i < 1000; i++) {
+            double position = scanner.getLinearScan(i);
+            try {
+                double solution = solve(pol, value, position, 3);
+                solutions.add(solution);
+            } catch (NotConvergingInTimeException ex) {
+                Logger.getLogger(NewtonSolver.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (solutions.size() >= maxSolutions) {
+                return solutions;
+            }
+        }
         //quadratische Abtastung
+        for (int i = 0; i < 1000; i++) {
+            double position = scanner.getSquareScan(i);
+            try {
+                double solution = solve(pol, value, position, 3);
+                solutions.add(solution);
+            } catch (NotConvergingInTimeException ex) {
+                Logger.getLogger(NewtonSolver.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (solutions.size() >= maxSolutions) {
+                return solutions;
+            }
+        }
         //exponentielle Abtastung
         for (int i = 0; i < 1000; i++) {
-            double position = 
-            int solution = 
+            double position = scanner.getExponentialScan(i);
+            try {
+                double solution = solve(pol, value, position, 3);
+                solutions.add(solution);
+            } catch (NotConvergingInTimeException ex) {
+                Logger.getLogger(NewtonSolver.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            if (solutions.size() >= maxSolutions) {
+                return solutions;
+            }
         }
-        
-        return solutions;
+        return solutions; 
     }
 
-    public Vector<Double> solveToZero(Polynom pol) {
+    public TreeSet<Double> solveToZero(Polynom pol) {
         return solve(pol, 0);
     }
 
